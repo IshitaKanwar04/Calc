@@ -13,7 +13,7 @@ class Calc{
         this.operation = undefined
     }
      delete(){
-
+       this.currOperand = this.currOperand.toString().slice(0,-1)
      }
 
      addNumberToScreen(number){
@@ -32,12 +32,41 @@ class Calc{
      }
 
      calculate(){
+        let computation
+        const prev = parseFloat(this.prevOperand)
+        const curr = parseFloat(this.currOperand)
+        if(isNaN( prev)||isNaN(curr)) return
+        switch(this.operation){
+            case '+' :
+                computation = prev + curr
+                break
+            case '-' :
+                computation = prev - curr
+                break
+            case '*' :
+                computation = prev * curr
+                break
+             case '/' :
+                computation = prev / curr
+                break
+            default:
+                return
+        }
 
-     }
+        this.currOperand = computation
+        this.operation = undefined
+        this.prevOperand = ''
+    }
 
      display(){
         this.currOperandTextElement.innerText = this.currOperand
-        this.prevOperandTextElement.innerText = this.prevOperand   
+        if(this.operation != null){
+            this.prevOperandTextElement.innerText = `${this.prevOperand} ${this.operation}`
+        }
+        else{
+            this.prevOperandTextElement.innerText = ''
+        }
+        //this.prevOperandTextElement.innerText = this.prevOperand   
     }
 }
 
@@ -66,4 +95,19 @@ opButtons.forEach(button =>{
         
         calc.display();
     })
+})
+
+equalsButton.addEventListener('click', ()=>{
+    calc.calculate()
+    calc.display()
+})
+
+allClearButton.addEventListener('click', ()=>{
+    calc.clear()
+    calc.display()
+})
+
+deleteButton.addEventListener('click', ()=>{
+    calc.delete()
+    calc.display()
 })
